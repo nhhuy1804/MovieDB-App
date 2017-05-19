@@ -12,10 +12,12 @@ class MoviesTableViewController: UITableViewController {
 
     let searchController = UISearchController(searchResultsController: nil)
     var movies = [Movie]()
-    var filteredMovies = [Movie]()
+    var filterMovies = [Movie]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Thiết lập các tham số searchController
         searchController.searchResultsUpdater = self as? UISearchResultsUpdating
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
@@ -23,15 +25,17 @@ class MoviesTableViewController: UITableViewController {
         
         loadMovieList()
     }
-
+    
+    // Lọc movie từ searchText và đưa vào mảng filterMovies
     func filterContentForSearchText(searchText: String, scope: String = "All") {
-        filteredMovies = movies.filter { movie in
+        filterMovies = movies.filter { movie in
             return (movie.title?.lowercased().contains(searchText.lowercased()))!
         }
         
         tableView.reloadData()
     }
     
+    // Load movie từ themoviedb
     func loadMovieList() {
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -47,10 +51,12 @@ class MoviesTableViewController: UITableViewController {
             
             if let httpURLRes = response as? HTTPURLResponse {
                 
+                // Request mã 200 (thành công)
                 if httpURLRes.statusCode == 200 {
                     do {
                         if let data = data, let response = try JSONSerialization.jsonObject(with: data, options:JSONSerialization.ReadingOptions(rawValue:0)) as? [String: AnyObject] {
                             
+                            // Lấy thông tin trả về từ mảng result
                             if let array: AnyObject = response["results"] {
                                 
                                 for movieDictonary in array as! [AnyObject] {
@@ -107,7 +113,7 @@ class MoviesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if searchController.isActive && searchController.searchBar.text != "" {
-            return filteredMovies.count
+            return filterMovies.count
         }
         
         return movies.count
@@ -117,7 +123,7 @@ class MoviesTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath)
         let movie: Movie
         if searchController.isActive && searchController.searchBar.text != "" {
-            movie = filteredMovies[indexPath.row]
+            movie = filterMovies[indexPath.row]
         } else {
             movie = movies[indexPath.row]
         }
@@ -150,6 +156,7 @@ class MoviesTableViewController: UITableViewController {
     }
 }
 
+// Download ảnh từ URL
 class Downloader {
     class func downloadImageWithURL(_ url:String) -> UIImage! {
         let data = try? Data(contentsOf: URL(string: url)!)
