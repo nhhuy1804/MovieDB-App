@@ -14,6 +14,7 @@ class MoviesTableViewController: UITableViewController {
     var movies = [Movie]()
     var filterMovies = [Movie]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

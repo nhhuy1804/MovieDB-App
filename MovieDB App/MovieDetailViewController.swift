@@ -15,7 +15,6 @@ class MovieDetailViewController: UIViewController {
     @IBOutlet weak var lblReleaseDate: UILabel!
     @IBOutlet weak var lblVote: UILabel!
     @IBOutlet weak var lblBudget: UILabel!
-    @IBOutlet weak var lblRevenue: UILabel!
     @IBOutlet weak var lblOverview: UILabel!
     
     var image: UIImage?
@@ -60,10 +59,7 @@ class MovieDetailViewController: UIViewController {
                                 self.lblVote.text = "\(vote)"
                             }
                             if let budget = detail["budget"] {
-                                self.lblBudget.text = "\(budget)$"
-                            }
-                            if let revenue = detail["revenue"] {
-                                self.lblRevenue.text = "\(revenue)$"
+                                self.lblBudget.text = "\(budget) USD"
                             }
                             if let overview = detail["overview"] {
                                 self.lblOverview.text = "Overview: \(overview)"
